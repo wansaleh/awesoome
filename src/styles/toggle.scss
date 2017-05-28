@@ -1,0 +1,127 @@
+.react-toggle {
+  touch-action: pan-x;
+
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+
+  user-select: none;
+
+}
+
+.react-toggle-screenreader-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.react-toggle--disabled {
+  cursor: not-allowed;
+  opacity: .5;
+  transition: opacity .25s;
+}
+
+.react-toggle-track {
+  width: 2rem;
+  height: 1rem;
+  padding: 0;
+  border-radius: 30px;
+  background-color: $black-50;
+  transition: all .2s ease;
+}
+
+.react-toggle:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: $black;
+}
+
+.react-toggle--checked .react-toggle-track {
+  background-color: $red;
+}
+
+.react-toggle--checked:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: $red;
+}
+
+.react-toggle-track-check {
+  position: absolute;
+  width: .5rem;
+  height: .5rem;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 0;
+  left: .3rem;
+  opacity: 0;
+  transition: opacity .25s ease;
+
+  svg {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.react-toggle--checked .react-toggle-track-check {
+  opacity: 1;
+  transition: opacity .25s ease;
+}
+
+.react-toggle-track-x {
+  position: absolute;
+  width: .5rem;
+  height: .5rem;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 0;
+  right: .3rem;
+  opacity: 1;
+  transition: opacity .25s ease;
+
+  svg {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.react-toggle--checked .react-toggle-track-x {
+  opacity: 0;
+}
+
+.react-toggle-thumb {
+  transition: all .5s easeInOutQuint 0ms;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(1rem - 4px);
+  height: calc(1rem - 4px);
+  // border: 1px solid $black;
+  border-radius: 50%;
+  background-color: $white;
+
+  box-sizing: border-box;
+
+  transition: all .25s ease;
+}
+
+.react-toggle--checked .react-toggle-thumb {
+  left: calc(100% - 1rem + 2px);
+  border-color: $red;
+}
+
+// .react-toggle--focus .react-toggle-thumb {
+//   box-shadow: 0px 0px 2px 3px #0099E0;
+// }
+
+// .react-toggle:active:not(.react-toggle--disabled) .react-toggle-thumb {
+//   box-shadow: 0px 0px 5px 5px #0099E0;
+// }

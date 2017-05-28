@@ -1,0 +1,314 @@
+@import '~primer-support/index';
+@import '~tachyons/css/tachyons';
+// @import '~tachyons-sass/tachyons';
+// bootstrap
+// $container-max-widths: (
+//   sm: 50rem,
+//   md: 60rem,
+//   lg: 70rem,
+//   xl: 80rem
+// );
+// $grid-gutter-width-base: 2rem;
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '~bootstrap/scss/mixins/grid';
+@import '~bootstrap/scss/mixins/grid-framework';
+@import '~bootstrap/scss/grid';
+@import '~material-colors/dist/colors';
+// @import 'toggle';
+
+@import "~primer-forms/build/build.css";
+@import "~primer-markdown/build/build.css";
+
+$brand: $md-blue-a700;
+
+@import "nprogress";
+
+body {
+  @extend .sans-serif;
+  min-height: 100vh;
+  background: $bg-gray-light;
+  color: $black;
+  font-weight: 300;
+}
+
+a {
+  @extend .link;
+
+  color: $gray-500;
+  transition: all .2s ease !important;
+
+  &:hover {
+    color: $brand;
+  }
+}
+
+label, label > span {
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+g-emoji {
+  display: inline-block;
+  margin-right: .5em;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row wrap;
+
+  .search {
+    flex: 0 1 33.33%;
+    width: 33.33%;
+
+    input {
+      width: 100%;
+      font-weight: 200;
+    }
+
+    @include media-breakpoint-down(sm) {
+      flex: 0 1 50%;
+      width: 50%;
+    }
+
+    @include media-breakpoint-down(xs) {
+      flex: 0 1 100%;
+      width: 100%;
+    }
+  }
+}
+
+.categories {
+  ul li {
+    &:not(:last-of-type):after {
+      content: "/";
+      color: $gray-300;
+    }
+
+    a {
+      &.active {
+        font-weight: 700;
+        color: $brand;
+      }
+    }
+  }
+}
+
+.lists {
+  h2 {
+    color: $text-gray-light;
+  }
+
+  .items {
+    padding: 0;
+    list-style: none;
+    line-height: 1.7;
+    font-size: 1rem;
+
+    .items {
+      font-size: .85em;
+
+      li {
+        position: relative;
+        padding-left: 1.5em;
+
+        &:before {
+          content: "\2014";
+          position: absolute;
+          left: 0;
+          top: 0;
+          color: $gray-200;
+        }
+      }
+    }
+
+    .links {
+      position: relative;
+      color: inherit;
+      letter-spacing: -.05em;
+
+      a {
+        // color: inherit;
+        display: block;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.active {
+          font-weight: 500;
+          color: $black;
+          // text-decoration: underline;
+        }
+      }
+
+      a:not(.github) {
+        padding-right: 1.25rem;
+      }
+
+      a.github {
+        position: absolute;
+        top: 0;
+        right: 0;
+        opacity: 0;
+        transition: all .3s ease;
+
+        // color: $brand;
+
+        &:hover {
+          color: $black;
+        }
+      }
+
+      &:hover {
+        // color: $brand;
+
+        a.github {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+.searching {
+  .categories, .lists {
+    a {
+      opacity: .3;
+    }
+  }
+}
+
+.content-card {
+  position: relative;
+  background: #fff;
+  // border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(#000, .1), 0 4px 10px rgba(#000, .075);
+  padding: 1rem;
+
+  @include media-breakpoint-up(md) {
+    padding: 2rem;
+  }
+
+  .info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5rem;
+  }
+
+  h3.repo {
+    color: $gray-400;
+    a {
+      color: inherit;
+      vertical-align: middle;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .last-commit {
+    color: $gray-300;
+    font-size: .8rem;
+  }
+
+  // .spinner {
+  //   position: absolute;
+  //   top: calc(50% - 20px);
+  //   left: calc(50% - 20px);
+  // }
+}
+
+.description {
+  color: $gray-400;
+  padding: 1rem;
+  border: $border;
+  // border-radius: 3px;
+  box-shadow: inset 0 0 .8rem 0 rgba($black, .1);
+  border-radius: 3px;
+  background: $gray-000;
+  margin-bottom: 3rem;
+}
+
+.markdown-body {
+  a {
+    color: $brand;
+
+    &:hover {
+      color: $black;
+      // text-decoration: underline;
+    }
+  }
+}
+
+footer {
+  color: $gray-400;
+  font-size: .8rem;
+  text-align: right;
+}
+
+// spacings
+// a[href] + strong {
+//   &:before {
+//     content: " ";
+//   }
+// }
+
+// a,
+// b,
+// big,
+// i,
+// small,
+// tt,
+// abbr,
+// acronym,
+// cite,
+// code,
+// dfn,
+// em,
+// kbd,
+// strong,
+// samp,
+// time,
+// var,
+// bdo,
+// br,
+// img,
+// map,
+// object,
+// q,
+// script,
+// span,
+// sub,
+// sup,
+// button,
+// input,
+// label {
+//   &:before, &:after {
+//     content: " ";
+//   }
+// }
+
+.fade-enter {
+  opacity: 0.01;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
