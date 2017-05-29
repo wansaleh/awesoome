@@ -8,6 +8,7 @@ import TimeAgo from 'timeago-react'
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 
 import processReadme from './process-readme'
+
 import { token } from '../../github.json'
 
 @inject('router', 'base', 'repo')
@@ -20,102 +21,101 @@ export default class Awesome extends Component {
     this.repoState = this.props.repo
   }
 
-  load() {
-    const repo = this.repoState.repo
-
+  load(repo) {
     this.repoState.loading = true
-
-    // readme
     nprogress.inc()
-    fetch(`https://api.github.com/repos/${repo}/readme`, {
-      headers: {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github.v3.html'
-      }
-    })
-    .then(res => res.text())
-    .then(body => {
-      this.repoState.readme = body
-      this.repoState.loading = false
-      nprogress.done()
-    })
 
     // repo information
-    nprogress.inc()
     fetch(`https://api.github.com/repos/${repo}`, {
       headers: { 'Authorization': `token ${token}` }
     })
     .then(res => res.json())
     .then(data => {
       this.repoState.info = data
-      nprogress.done()
-    })
 
-    // commits
-    nprogress.inc()
-    fetch(`https://api.github.com/repos/${repo}/commits`, {
-      headers: { 'Authorization': `token ${token}` }
-    })
-    .then(res => res.json())
-    .then(data => {
-      this.repoState.lastCommit = data[0]
-      nprogress.done()
-    })
+      // commits
+      fetch(`https://api.github.com/repos/${repo}/commits`, {
+        headers: { 'Authorization': `token ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        this.repoState.lastCommit = data[0]
 
+        // readme
+        fetch(`https://api.github.com/repos/${repo}/readme`, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3.html'
+          }
+        })
+        .then(res => res.text())
+        .then(body => {
+          this.repoState.readme = body
+          this.repoState.loading = false
+          nprogress.done()
+        })
+      })
+    })
   }
 
   componentDidMount() {
-    this.repoState.repo = `${this.props.match.params.owner}/${this.props.match.params.repo}`
-    this.baseState.loadThings(this.load.bind(this))
+    this.repoState.fullName = `${this.props.match.params.owner}/${this.props.match.params.repo}`
+
+    this.baseState.load(things => {
+      this.load(this.repoState.fullName)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params.owner !== nextProps.match.params.owner ||
       this.props.match.params.repo !== nextProps.match.params.repo)
     {
-      this.repoState.repo = `${nextProps.match.params.owner}/${nextProps.match.params.repo}`
-      this.baseState.loadThings(this.load.bind(this))
+      this.repoState.fullName = `${nextProps.match.params.owner}/${nextProps.match.params.repo}`
+
+      this.baseState.load(things => {
+        this.load(this.repoState.fullName)
+      })
     }
   }
 
   componentWillUnmount() {
     this.repoState.info = null
-    this.repoState.repo = null
+    this.repoState.fullName = null
     this.repoState.readme = null
     this.repoState.loading = false
+  }
+
+  handleHashClick(e) {
+    // e.target.href.split('#')[1]
   }
 
   render() {
     // document.title
 
-    const { info, repo, lastCommit, readme, loading } = this.repoState
-    // console.log(lastCommit);
+    const { info, fullName, lastCommit, readme, loading } = this.repoState
+
     return (
       <div className="col-md-9">
         <CSSTransitionGroup
           transitionName="fade"
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={500}>
+          transitionEnterTimeout={300}
+          transitionLeaveTimeout={300}>
 
           {(!loading && readme) &&
             <div className="content-card">
               {info &&
                 <div className="info">
                   <h3 className="repo f5 fw1 ma0">
+                    {/*<i className="fa fa-github v-mid" />&nbsp;*/}
                     <a href={info.owner.html_url} target="_blank" rel="noopener noreferrer">{info.owner.login}</a>
                     <span className="v-mid dib mh1">/</span>
                     <a href={info.html_url} target="_blank" rel="noopener noreferrer">{info.name}</a>
                   </h3>
                   {lastCommit &&
                     <div className="last-commit">
-                      <a href={lastCommit.html_url} target="_blank" rel="noopener noreferrer">
-                        Last Commit was&nbsp;
-                        <TimeAgo datetime={lastCommit.commit.author.date} />
-                      </a>
-                      &nbsp;by&nbsp;
-                      <a href={lastCommit.author.html_url} target="_blank" rel="noopener noreferrer">
-                        {lastCommit.author.login}
-                      </a>
+                      Last Commit:&nbsp;
+                      <TimeAgo datetime={lastCommit.commit.author.date} />
+                      &nbsp;by {lastCommit.commit.author.name}
                     </div>
                   }
                 </div>
@@ -124,7 +124,7 @@ export default class Awesome extends Component {
               {(info && info.description) &&
                 <div className="description cf">
                   {info.homepage &&
-                    <a href={info.homepage} target="_blank" rel="noopener noreferrer" className="fr ml3">
+                    <a href={info.homepage} target="_blank" rel="noopener noreferrer" className="fr pl3 pb3">
                       {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
                     </a>
                   }
@@ -133,12 +133,13 @@ export default class Awesome extends Component {
                 </div>
               }
 
-              {readme && processReadme(this.baseState.things, repo, readme)}
+              {/*<div dangerouslySetInnerHTML={{__html: readme}}></div>*/}
+              {readme && processReadme(this.baseState.things, fullName, readme)}
             </div>
           }
 
         </CSSTransitionGroup>
-
-      </div>      );
+      </div>
+    );
   }
 }

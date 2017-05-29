@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { withRouter } from 'react-router'
-import { NavLink } from 'react-router-dom'
-import _some from 'lodash/some'
+// import { NavLink } from 'react-router-dom'
+// import _some from 'lodash/some'
+// import { flattenListing, getListing } from '../utils'
 
 
-import categories from './things.json'
+// import categories from './things.json'
 
 @inject('router', 'base')
 @withRouter
@@ -16,30 +17,11 @@ export default class Testing extends Component {
     this.baseState = this.props.base
   }
 
-  isListed(link) {
-    const itemWalk = (items) => {
-      return _some(items, item => {
-        if (item.link === link) {
-          return true
-        }
-
-        if (item.items) {
-          return itemWalk(item.items)
-        }
-
-        return false
-      })
-    }
-
-    return _some(categories, category => {
-      return itemWalk(category.items)
-    })
-  }
-
   componentDidMount() {
-    const testLink = 'https://github.com/sindresorhus/awesome-npm'
-
-    console.log(this.isListed(testLink));
+    this.baseState.load(things => {
+      // let test = flattenListing(things)
+      // console.log(test);
+    })
   }
 
   render() {

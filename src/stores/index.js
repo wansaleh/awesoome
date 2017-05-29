@@ -1,23 +1,20 @@
 import remotedev from 'mobx-remotedev'
 import { observable, action } from 'mobx'
-import fetch from 'unfetch'
 import nprogress from 'nprogress'
 
 @remotedev
 export class BaseStore {
   @observable loading = true
   @observable things = []
-  @observable current = null
   @observable searchTerm = ''
 
   constructor(router) {
     this.router = router
   }
 
-  @action load(callback = () => {}) {
-    if (this.things && this.things.length > 0) {
-      callback(this.things)
-      return false
+  loadThings(callback = () => {}) {
+    if (this.things.length > 0) {
+      callback()
     }
     else {
       this.loading = true
@@ -30,18 +27,39 @@ export class BaseStore {
         this.things = data
         this.loading = false
 
-        callback(this.things)
+        callback()
         nprogress.done()
       })
     }
   }
+
+  // findRepo(repo) {
+  //   for (let thing in this.things) {
+  //     for (let item in thing.items) {
+
+  //       if (item.items && item.items.length > 0) {
+  //         for (let subitem in item.items) {
+  //           if (subitem.full_name === repo) {
+  //             return subitem
+  //           }
+  //         }
+  //       }
+  //       console.log(item.full_name, repo);
+  //       if (item.full_name === repo) {
+  //         return item
+  //       }
+  //     }
+  //   }
+
+  //   return false
+  // }
 }
 
 @remotedev
 export class RepoStore {
   @observable info = null
+  @observable repo = null
   @observable lastCommit = null
-  @observable fullName = null
   @observable readme = null
   @observable loading = false
 

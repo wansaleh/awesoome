@@ -16,7 +16,8 @@ module.exports = options => ({
 
   postcss: {
     plugins: [
-      require('postcss-cssnext')({ features: { autoprefixer: false } })
+      require('postcss-cssnext')({ features: { autoprefixer: false } }),
+      require('postcss-easings')()
     ]
   },
 

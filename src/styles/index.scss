@@ -26,10 +26,13 @@ $brand: $md-blue-a700;
 
 body {
   @extend .sans-serif;
-  min-height: 100vh;
   background: $bg-gray-light;
   color: $black;
   font-weight: 300;
+}
+
+body, #app, [data-reactroot] {
+  min-height: 100vh;
 }
 
 a {
@@ -83,6 +86,14 @@ header {
 }
 
 .categories {
+  // overflow-x: auto;
+
+  // ul {
+  //   width: auto;
+  //   padding-bottom: 1rem;
+  //   white-space: nowrap;
+  // }
+
   ul li {
     &:not(:last-of-type):after {
       content: "/";
@@ -245,9 +256,16 @@ header {
       // text-decoration: underline;
     }
   }
+
+  blockquote {
+    margin-left: 0;
+  }
 }
 
 footer {
+  position: absolute;
+  bottom: 1rem;
+  right: 15px;
   color: $gray-400;
   font-size: .8rem;
   text-align: right;
@@ -295,13 +313,35 @@ footer {
 //   }
 // }
 
+.fade-slide-enter {
+  opacity: 0.01;
+  transform: translateX(100px);
+}
+
+.fade-slide-enter.fade-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all .5s ease;
+}
+
+.fade-slide-leave {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-slide-leave.fade-slide-leave-active {
+  opacity: 0.01;
+  transform: translateX(100px);
+  transition: all .5s ease;
+}
+
 .fade-enter {
   opacity: 0.01;
 }
 
 .fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 500ms ease-in;
+  transition: all .5s ease;
 }
 
 .fade-leave {
@@ -310,5 +350,5 @@ footer {
 
 .fade-leave.fade-leave-active {
   opacity: 0.01;
-  transition: opacity 300ms ease-in;
+  transition: all .5s ease;
 }

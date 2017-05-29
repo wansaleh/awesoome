@@ -3,16 +3,20 @@ import $ from 'jquery'
 import Parser from 'html-react-parser'
 import domToReact from 'html-react-parser/lib/dom-to-react';
 import { Link } from 'react-router-dom'
-import { isListed, getCategoryFromLink } from '../utils'
+import nprogress from 'nprogress'
+import Waypoint from 'react-waypoint'
+
+import { getCategoryFromUrl } from '../utils'
 
 export default (things, repo, readme) => {
+  nprogress.inc()
   let body = $(readme)
 
   // repair awesome links
   body.find('a[href^="https://github.com"]').each((i, el) => {
     let href = $(el).attr('href')
 
-    const category = getCategoryFromLink(things, href)
+    const category = getCategoryFromUrl(things, href)
 
     if (category !== false) {
       let newHref = href.replace('https://github.com', `/${category.id}`)
@@ -93,6 +97,9 @@ export default (things, repo, readme) => {
         let { align, style, ...props } = domNode.attribs;
 
         let className
+        if (align === 'absmiddle') {
+          className = 'v-mid'
+        }
         if (align === 'left') {
           className = 'fl pr2'
         }
@@ -127,6 +134,8 @@ export default (things, repo, readme) => {
 
     }
   }
+
+  nprogress.done()
 
   return Parser(body.html(), options)
 }

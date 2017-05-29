@@ -4,10 +4,51 @@ import { token } from '../github.json'
 import _find from 'lodash/find'
 import _some from 'lodash/some'
 
-export const isListed = (things, link) => {
+export const flattenListing = (things) => {
+  let output = []
+
+  things.forEach(thing => {
+    if (thing.items) {
+      let subitems = flattenListing(thing.items)
+
+      subitems.forEach(subitem => {
+        output.push(subitem)
+      })
+    }
+    else {
+      output.push(thing)
+    }
+  })
+
+  return output
+}
+
+export const getListing = (things, repo) => {
+  const itemWalk = (items) => {
+    return _find(items, item => {
+      if (item.full_name === repo) {
+        return true
+      }
+
+      if (item.items) {
+        return itemWalk(item.items)
+      }
+
+      return false
+    })
+  }
+
+  for (let thing in things) {
+    let item = itemWalk(thing.items)
+    if (item !== false)
+      return item
+  }
+}
+
+export const isListed = (things, url) => {
   const itemWalk = (items) => {
     return _some(items, item => {
-      if (item.link === link) {
+      if (item.url === url) {
         return true
       }
 
@@ -24,10 +65,10 @@ export const isListed = (things, link) => {
   })
 }
 
-export const getCategoryFromLink = (things, link) => {
+export const getCategoryFromUrl = (things, url) => {
   const itemWalk = (items) => {
     return _find(items, item => {
-      if (item.link === link) {
+      if (item.url === url) {
         return true
       }
 
@@ -48,41 +89,4 @@ export const getCategoryFromLink = (things, link) => {
   }
 
   return false
-}
-
-export const ghFetch = (url, callback) => {
-  nprogress.inc()
-  fetch(url, {
-    headers: {
-      'Authorization': `token ${token}`
-    }
-  })
-    .then(res => res.json())
-    .then(data => {
-      callback(data)
-      nprogress.done()
-    })
-    .catch(err => {
-      console.error(err)
-      nprogress.done()
-    })
-}
-
-export const ghFetchHTML = (url, callback) => {
-  nprogress.inc()
-  fetch(url, {
-    headers: {
-      'Authorization': `token ${token}`,
-      'Accept': 'application/vnd.github.v3.html'
-    }
-  })
-    .then(res => res.text())
-    .then(body => {
-      callback(body)
-      nprogress.done()
-    })
-    .catch(err => {
-      console.error(err)
-      nprogress.done()
-    })
 }

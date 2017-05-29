@@ -8,19 +8,19 @@ import { StickyContainer, Sticky } from 'react-sticky'
 import Parser from 'html-react-parser'
 import _find from 'lodash/find'
 
-const parseHref = (href) => {
-  const match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-  return match && {
-    href: href,
-    protocol: match[1],
-    host: match[2],
-    hostname: match[3],
-    port: match[4],
-    pathname: match[5],
-    search: match[6],
-    hash: match[7]
-  }
-}
+// const parseHref = (href) => {
+//   const match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+//   return match && {
+//     href: href,
+//     protocol: match[1],
+//     host: match[2],
+//     hostname: match[3],
+//     port: match[4],
+//     pathname: match[5],
+//     search: match[6],
+//     hash: match[7]
+//   }
+// }
 
 @inject('router', 'base')
 @withRouter
@@ -32,33 +32,31 @@ export default class Category extends Component {
   }
 
   get(category) {
-    this.baseState.current = _find(this.baseState.things, thing => thing.id === category)
+    return _find(this.baseState.things, thing => thing.id === category)
   }
 
   componentDidMount() {
-    const { match } = this.props
-    this.baseState.load(things => {
-      this.get(match.params.category)
-    })
+    console.log('cdm: sidebar');
+    // const { match } = this.props
+    // this.get(match.params.category)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { match } = nextProps
+    console.log('cwrp: sidebar');
+    // const { match } = nextProps
 
-    if (this.props.match.params.category !== nextProps.match.params.category) {
-      this.baseState.load(things => {
-        this.get(match.params.category)
-      })
-    }
+    // if (this.props.match.params.category !== nextProps.match.params.category) {
+    //   this.get(match.params.category)
+    // }
   }
 
-  componentWillUnmount() {
-    this.baseState.current = null
-  }
+  // componentWillUnmount() {
+  //   this.baseState.current = null
+  // }
 
-  getLink(url) {
+  getLink(repo) {
     const { match } = this.props
-    return '/' + match.params.category + parseHref(url).pathname
+    return '/' + match.params.category + '/' + repo
   }
 
   renderItems(items) {
@@ -68,7 +66,7 @@ export default class Category extends Component {
       <li key={i}>
         <div className="links">
           <NavLink
-            to={this.getLink(item.url)}
+            to={this.getLink(item.full_name)}
             activeClassName="active">
             {Parser(item.title)}
           </NavLink>
@@ -85,18 +83,13 @@ export default class Category extends Component {
   }
 
   render() {
-    const { current } = this.baseState
+    const { match } = this.props
+    const current = this.get(match.params.category)
 
     if (!current) return null
 
     return (
       <StickyContainer className="col-md-3 pb5 lists">
-        {/*<label>
-          <Toggle
-            defaultChecked={true}
-            onChange={()=>{}} />
-        </label>*/}
-
         <Sticky>
           {
             ({ style }) =>

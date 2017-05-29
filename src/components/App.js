@@ -4,9 +4,14 @@ import { Route, Switch, Link, NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { Emojione } from 'react-emoji-render'
 import cls from 'classnames'
+// import fuzzyFilterFactory from 'react-fuzzy-filter'
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 
 import Category from './Category'
 import Awesome from './Awesome'
+// import Testing from './Testing'
+
+// const { InputFilter, FilterResults } = fuzzyFilterFactory();
 
 @inject('router', 'base')
 @withRouter
@@ -18,11 +23,11 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.baseState.load()
+    this.baseState.loadThings()
   }
 
   hightlightLinks() {
-    const { searchTerm } = this.baseState
+    // const { searchTerm } = this.baseState
   }
 
   handleSearch(e) {
@@ -50,7 +55,7 @@ export default class App extends Component {
         </header>
 
         <div className="categories">
-          <ul className="list mv2 pa0 f4 fw3 nl2 nr2">
+          <ul className="list mv2 pa0 f3 fw3 nl2 nr2">
             {things && things.map(item =>
               <li className="dib" key={item.id}>
                 <NavLink to={`/${item.id}`}
@@ -64,10 +69,8 @@ export default class App extends Component {
 
         <Route render={({ location, history, match }) => (
           <div className="row mt4">
-
             <Route path="/:category" component={Category} />
             <Route path="/:category/:owner/:repo" component={Awesome} />
-
           </div>
         )} />
 
