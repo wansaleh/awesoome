@@ -7,6 +7,7 @@ import { NavLink } from 'react-router-dom'
 import { StickyContainer, Sticky } from 'react-sticky'
 import Parser from 'html-react-parser'
 import _find from 'lodash/find'
+import cls from 'classnames'
 
 // const parseHref = (href) => {
 //   const match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
@@ -59,14 +60,22 @@ export default class Category extends Component {
     return '/' + match.params.category + '/' + repo
   }
 
+  isItemFound(id) {
+    if (!this.baseState.itemResults)
+      return false
+    return this.baseState.itemResults.includes(id)
+  }
+
   renderItems(items) {
     if (!items) return null
 
     return items.map((item, i) =>
       <li key={i}>
-        <div className="links">
+        <div className="links" data-id={item.id}>
           <NavLink
-            to={this.getLink(item.full_name)}
+            to={this.getLink(item.id)}
+            data-id={item.id}
+            className={cls({ highlight: this.isItemFound(item.id) })}
             activeClassName="active">
             {Parser(item.title)}
           </NavLink>
@@ -89,12 +98,12 @@ export default class Category extends Component {
     if (!current) return null
 
     return (
-      <StickyContainer className="col-md-3 pb5 lists">
+      <StickyContainer className={cls("col-md-3 pb5 lists", { searching: this.baseState.searchTerm !== '' })}>
         <Sticky>
           {
             ({ style }) =>
               <div style={style}>
-                <h2 className="fw1">
+                <h2>
                   {current.title}
                 </h2>
                 <ul className="items list lh-copy">

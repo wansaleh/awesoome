@@ -1,17 +1,41 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
-import { Route, Switch, Link, NavLink } from 'react-router-dom'
+import { Route, Link, NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { Emojione } from 'react-emoji-render'
 import cls from 'classnames'
-// import fuzzyFilterFactory from 'react-fuzzy-filter'
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+import Fuse from 'fuse.js'
+import _map from 'lodash/map'
+// import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 
 import Category from './Category'
 import Awesome from './Awesome'
 // import Testing from './Testing'
 
 // const { InputFilter, FilterResults } = fuzzyFilterFactory();
+
+const fuseOptions = {
+  shouldSort: true,
+  threshold: 0.3,
+  location: 0,
+  distance: 80,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+};
+
+const fuseOptionsCategory = {
+  ...fuseOptions,
+  keys: [
+    // 'title',
+    'items.title'
+  ]
+}
+const fuseOptionsItem = {
+  ...fuseOptions,
+  keys: [
+    'title'
+  ]
+}
 
 @inject('router', 'base')
 @withRouter
@@ -26,20 +50,37 @@ export default class App extends Component {
     this.baseState.loadThings()
   }
 
-  hightlightLinks() {
-    // const { searchTerm } = this.baseState
+  hightlightCategories() {
+    const { things, searchTerm } = this.baseState
+    const fuse = new Fuse(things, fuseOptionsCategory)
+    const result = fuse.search(searchTerm)
+    this.baseState.categoryResults = _map(result, 'id');
+  }
+
+  hightlightItems() {
+    const { flatThings, searchTerm } = this.baseState
+    const fuse = new Fuse(flatThings, fuseOptionsItem)
+    const result = fuse.search(searchTerm)
+    this.baseState.itemResults = _map(result, 'id');
+  }
+
+  isCategoryFound(id) {
+    if (!this.baseState.categoryResults)
+      return false
+    return this.baseState.categoryResults.includes(id)
   }
 
   handleSearch(e) {
     this.baseState.searchTerm = e.target.value
-    this.hightlightLinks()
+    this.hightlightCategories()
+    this.hightlightItems()
   }
 
   render() {
     const { things, searchTerm } = this.baseState
 
     return (
-      <div className={cls("container pv5", { searching: searchTerm !== '' })}>
+      <div className="container pv5">
         <header>
           <h1 className="f2 fw9 ma0 tracked-tight nl2">
             <Link to="/"><Emojione svg text=":sunglasses: Awesoo.me" /></Link>
@@ -50,16 +91,17 @@ export default class App extends Component {
               className="form-control"
               type="search" placeholder="Search something awesome..."
               value={searchTerm}
-              onInput={this.handleSearch.bind(this)} />
+              onChange={this.handleSearch.bind(this)} />
           </div>
         </header>
 
-        <div className="categories">
+        <div className={cls("categories", { searching: searchTerm !== '' })}>
           <ul className="list mv2 pa0 f3 fw3 nl2 nr2">
             {things && things.map(item =>
               <li className="dib" key={item.id}>
                 <NavLink to={`/${item.id}`}
-                  className="dib ph2 pv1 mv0"
+                  data-id={item.id}
+                  className={cls("dib ph2 pv1 mv0", { highlight: this.isCategoryFound(item.id) })}
                   activeClassName="active">
                   {item.title}</NavLink>
               </li>
@@ -67,8 +109,19 @@ export default class App extends Component {
           </ul>
         </div>
 
+        {/*<div>
+          {categoryResults && categoryResults.map((result, i) =>
+            <span key={i}>{result}&nbsp;</span>
+          )}
+        </div>*/}
+
         <Route render={({ location, history, match }) => (
           <div className="row mt4">
+            <Route exact path="/" render={() =>
+                <div className="home">
+                  <Emojione svg text=":sunglasses:" />
+                </div>
+            } />
             <Route path="/:category" component={Category} />
             <Route path="/:category/:owner/:repo" component={Awesome} />
           </div>

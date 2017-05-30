@@ -4,6 +4,9 @@ import { token } from '../github.json'
 import _find from 'lodash/find'
 import _some from 'lodash/some'
 
+// export const compareProps = (curProps, nextProps, ) => {
+// }
+
 export const flattenListing = (things) => {
   let output = []
 

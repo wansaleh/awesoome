@@ -3,13 +3,18 @@ import $ from 'jquery'
 import Parser from 'html-react-parser'
 import domToReact from 'html-react-parser/lib/dom-to-react';
 import { Link } from 'react-router-dom'
-import nprogress from 'nprogress'
-import Waypoint from 'react-waypoint'
+// import nprogress from 'nprogress'
+// import Waypoint from 'react-waypoint'
 
 import { getCategoryFromUrl } from '../utils'
 
 export default (things, repo, readme) => {
-  nprogress.inc()
+  // nprogress.inc()
+
+  if (!readme) return null
+
+  console.log('processing readme');
+
   let body = $(readme)
 
   // repair awesome links
@@ -65,7 +70,7 @@ export default (things, repo, readme) => {
     if (!src) return false
     let parentLink = $(el).parent('a')
     if (parentLink && parentLink.attr('href') === src) {
-      $(el).unwrap('a')
+      $(el).unwrap()
     }
   })
 
@@ -83,6 +88,15 @@ export default (things, repo, readme) => {
       .attr('data-processed', true)
   })
 
+  // repair tables
+  // console.log(body.find('table'));
+  body.find('table, thead, tbody, tr').each((i, el) => {
+    $(el).contents().filter(function() {
+      console.log(this.nodeType);
+      return this.nodeType === 3
+    }).remove();
+  })
+
   const options = {
     replace: (domNode) => {
       if (!domNode.attribs) return;
@@ -96,7 +110,9 @@ export default (things, repo, readme) => {
       else if (domNode.name === 'img') {
         let { align, style, ...props } = domNode.attribs;
 
-        let className
+        let className = props.class
+        delete props.class
+
         if (align === 'absmiddle') {
           className = 'v-mid'
         }
@@ -135,7 +151,7 @@ export default (things, repo, readme) => {
     }
   }
 
-  nprogress.done()
+  // nprogress.done()
 
   return Parser(body.html(), options)
 }

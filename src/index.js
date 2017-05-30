@@ -12,6 +12,11 @@ import '@/styles/index.scss'
 
 import { BaseStore, RepoStore } from '@/stores'
 
+// if (process.env.NODE_ENV !== 'production') {
+//   const { whyDidYouUpdate } = require('why-did-you-update')
+//   whyDidYouUpdate(React)
+// }
+
 const browserHistory = createBrowserHistory()
 const routerStore = new RouterStore()
 
