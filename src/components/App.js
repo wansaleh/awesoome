@@ -128,7 +128,12 @@ export default class App extends Component {
         )} />
 
         <footer>
-          <p><Emojione svg text="With 💋 from Malaysia 🇲🇾" /></p>
+          <p>
+            <Emojione svg text="With 💋 from 🇲🇾" />.
+            {' '}
+            <a href="https://github.com/wansaleh/awesoome" target="_blank" rel="noopener noreferrer">
+              Source Code.</a>
+          </p>
         </footer>
       </div>
     )

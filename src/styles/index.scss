@@ -1,3 +1,5 @@
+@import url('//fonts.googleapis.com/css?family=Droid+Sans+Mono');
+
 @import '~primer-support/index';
 @import '~tachyons/css/tachyons';
 // @import '~tachyons-sass/tachyons';
@@ -171,9 +173,9 @@ header {
         // color: inherit;
         display: block;
         position: relative;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        // white-space: nowrap;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
 
         &.active {
           font-weight: 500;
@@ -208,6 +210,40 @@ header {
         }
       }
     }
+  }
+}
+
+.stars {
+  display: inline-block;
+  margin-left: .3rem;
+  font-size: .7em;
+  color: $gray-300;
+}
+
+@keyframes blinker {
+  50% { opacity: .2; }
+}
+
+.dot {
+  display: inline-block;
+  width: .5em;
+  height: .5em;
+  background: none;
+  border-radius: .5em;
+  vertical-align: middle;
+  margin-left: .5rem;
+
+  &.new {
+    background: $md-green-a400;
+  }
+
+  &.hot {
+    background: $md-red-a200;
+    animation: blinker 2s ease infinite;
+  }
+
+  &.old {
+    background: $md-blue-grey-200;
   }
 }
 
@@ -292,6 +328,10 @@ header {
 
   blockquote {
     margin-left: 0;
+  }
+
+  pre, code {
+    font-family: 'Droid Sans Mono', 'Courier New', Courier, monospace;
   }
 }
 

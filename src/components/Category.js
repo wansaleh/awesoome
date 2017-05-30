@@ -23,6 +23,12 @@ import cls from 'classnames'
 //   }
 // }
 
+const Dot = (props) => {
+  return (
+    <span className={cls("dot", props.className)} />
+  )
+}
+
 @inject('router', 'base')
 @withRouter
 @observer
@@ -66,6 +72,14 @@ export default class Category extends Component {
     return this.baseState.itemResults.includes(id)
   }
 
+  daysSinceLastCommit(lastCommit) {
+    let msSince = Date.now() - Date.parse(lastCommit)
+    if (msSince < 0)
+      return 0
+
+    return Math.ceil((Date.now() - Date.parse(lastCommit)) / 86400000)
+  }
+
   renderItems(items) {
     if (!items) return null
 
@@ -78,6 +92,15 @@ export default class Category extends Component {
             className={cls({ highlight: this.isItemFound(item.id) })}
             activeClassName="active">
             {Parser(item.title)}
+            <span className="stars">
+              {item.stargazers}&nbsp;
+              <i className="fa fa-star"></i>
+            </span>
+            <Dot className={cls({
+              hot: this.daysSinceLastCommit(item.last_commit) <= 7,
+              new: this.daysSinceLastCommit(item.last_commit) <= 30,
+              old: this.daysSinceLastCommit(item.last_commit) > 180,
+            })} />
           </NavLink>
           <a href={item.url} className="github" target="_blank" rel="noopener noreferrer">
             <i className="fa fa-github" /></a>
