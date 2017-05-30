@@ -29,6 +29,7 @@
     "git-scripts": "^0.2.1",
     "mobx-remotedev": "^0.2.6",
     "node-sass": "^4.5.3",
+    "poi": "^8.1.1",
     "postcss-cssnext": "^2.11.0",
     "postcss-easings": "^1.0.0",
     "react-hot-loader": "^3.0.0-beta.7",
