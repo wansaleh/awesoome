@@ -8,8 +8,8 @@ import Fuse from 'fuse.js'
 import _map from 'lodash/map'
 // import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 
-import Category from './Category'
-import Awesome from './Awesome'
+import Sidebar from './Sidebar'
+import Content from './Content'
 // import Testing from './Testing'
 
 // const { InputFilter, FilterResults } = fuzzyFilterFactory();
@@ -82,7 +82,7 @@ export default class App extends Component {
     return (
       <div className="container pv5">
         <header>
-          <h1 className="f2 fw9 ma0 tracked-tight nl2">
+          <h1 className="f2 fw9 ma0 tracked-tight">
             <Link to="/"><Emojione svg text=":sunglasses: Awesoo.me" /></Link>
           </h1>
 
@@ -96,12 +96,12 @@ export default class App extends Component {
         </header>
 
         <div className={cls("categories", { searching: searchTerm !== '' })}>
-          <ul className="list mv2 pa0 f3 fw3 nl2 nr2">
+          <ul className="list">
             {things && things.map(item =>
               <li className="dib" key={item.id}>
                 <NavLink to={`/${item.id}`}
                   data-id={item.id}
-                  className={cls("dib ph2 pv1 mv0", { highlight: this.isCategoryFound(item.id) })}
+                  className={cls({ highlight: this.isCategoryFound(item.id) })}
                   activeClassName="active">
                   {item.title}</NavLink>
               </li>
@@ -122,17 +122,17 @@ export default class App extends Component {
                   <Emojione svg text=":sunglasses:" />
                 </div>
             } />
-            <Route path="/:category" component={Category} />
-            <Route path="/:category/:owner/:repo" component={Awesome} />
+            <Route path="/:category" component={Sidebar} />
+            <Route path="/:category/:owner/:repo" component={Content} />
           </div>
         )} />
 
         <footer>
           <p>
-            <Emojione svg text="With 💋 from 🇲🇾" />.
-            {' '}
+            <Emojione svg text="With 💋 from 🇲🇾" />
+            {' / '}
             <a href="https://github.com/wansaleh/awesoome" target="_blank" rel="noopener noreferrer">
-              Source Code.</a>
+              Source.</a>
           </p>
         </footer>
       </div>

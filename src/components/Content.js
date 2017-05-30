@@ -7,14 +7,15 @@ import { Emojione } from 'react-emoji-render'
 import TimeAgo from 'timeago-react'
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import { animateScroll } from 'react-scroll'
+import { Helmet } from "react-helmet"
 
-import processReadme from './process-readme'
+import processReadme from '../utils/readme'
 import { token } from '../../github.json'
 
 @inject('router', 'base', 'repo')
 @withRouter
 @observer
-export default class Awesome extends Component {
+export default class Content extends Component {
   constructor(props) {
     super(props)
     this.baseState = this.props.base
@@ -107,8 +108,6 @@ export default class Awesome extends Component {
   }
 
   render() {
-    // document.title
-
     const { info, repo, lastCommit, readme, loading } = this.repoState
 
     const ready =
@@ -120,6 +119,13 @@ export default class Awesome extends Component {
     // console.log(lastCommit);
     return (
       <div className="col-md-9">
+        {info &&
+          <Helmet>
+            <title>{info.name}</title>
+            <meta name="description" content={info.description} />
+          </Helmet>
+        }
+
         <CSSTransitionGroup
           transitionName="fade"
           transitionEnterTimeout={500}
@@ -127,13 +133,23 @@ export default class Awesome extends Component {
 
           {ready &&
             <div className="content-card">
+              <div className="description cf">
+                {info.homepage &&
+                  <a href={info.homepage} target="_blank" rel="noopener noreferrer" className="fr ml3">
+                    {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
+                  </a>
+                }
+                {' '}
+                <Emojione svg text={info.description} />
+              </div>
+
               <div className="info">
-                <h3 className="repo f6 fw1 ma0">
+                <h3 className="repo">
                   {info.owner && <a href={info.owner.html_url} target="_blank" rel="noopener noreferrer">{info.owner.login}</a>}
                   <span className="v-mid dib mh1">/</span>
                   <a href={info.html_url} target="_blank" rel="noopener noreferrer">{info.name}</a>
                 </h3>
-                <div className="last-commit f6">
+                <div className="last-commit">
                   <a href={lastCommit.html_url} target="_blank" rel="noopener noreferrer">
                     Last commit&nbsp;
                     <TimeAgo datetime={lastCommit.commit.author.date} />
@@ -143,16 +159,6 @@ export default class Awesome extends Component {
                     {lastCommit.author.login}
                   </a>
                 </div>
-              </div>
-
-              <div className="description cf">
-                {info.homepage &&
-                  <a href={info.homepage} target="_blank" rel="noopener noreferrer" className="fr ml3">
-                    {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
-                  </a>
-                }
-                {' '}
-                <Emojione svg text={info.description} />
               </div>
 
               {processReadme(this.baseState.things, repo, readme)}

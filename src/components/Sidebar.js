@@ -32,7 +32,7 @@ const Dot = (props) => {
 @inject('router', 'base')
 @withRouter
 @observer
-export default class Category extends Component {
+export default class Sidebar extends Component {
   constructor(props) {
     super(props)
     this.baseState = this.props.base

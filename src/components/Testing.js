@@ -3,7 +3,6 @@ import { inject, observer } from 'mobx-react'
 import { withRouter } from 'react-router'
 // import { NavLink } from 'react-router-dom'
 // import _some from 'lodash/some'
-// import { flattenListing, getListing } from '../utils'
 
 
 // import categories from './things.json'

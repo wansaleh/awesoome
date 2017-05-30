@@ -3,17 +3,17 @@ import $ from 'jquery'
 import Parser from 'html-react-parser'
 import domToReact from 'html-react-parser/lib/dom-to-react';
 import { Link } from 'react-router-dom'
-// import nprogress from 'nprogress'
-// import Waypoint from 'react-waypoint'
 
-import { getCategoryFromUrl } from '../utils'
+import { getCategoryFromUrl } from './misc'
 
 export default (things, repo, readme) => {
-  // nprogress.inc()
 
   if (!readme) return null
 
   console.log('processing readme');
+
+  // repair class attributes
+  readme = readme.replace(/class=["']([a-zA-Z0-9:;\.\s\(\)\-\,]*)["']/, 'className="$1"')
 
   let body = $(readme)
 
@@ -151,7 +151,6 @@ export default (things, repo, readme) => {
     }
   }
 
-  // nprogress.done()
-
   return Parser(body.html(), options)
+
 }
