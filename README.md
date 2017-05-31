@@ -1,4 +1,6 @@
-# Basic React Starter
+# The *Awesome* Awesome List viewer
+
+I wanted a searchable, beautiful viewer of the awesome initiative started by [sindresorhus](https://github.com/sindresorhus/awesome). Then comes [Awesoome](http://awesoo.me).
 
 ## Poi
 Built using the excellent [Poi](https://poi.js.org). IMHO the best no-config development kit.
@@ -32,3 +34,6 @@ Deal with it. 😎
 	```shell
     poi
     ```
+
+## See also
+[Awesome Search](https://awesomelists.top)
