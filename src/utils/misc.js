@@ -25,3 +25,11 @@ export const getCategoryFromUrl = (things, url) => {
 
   return false
 }
+
+export const daysSinceLastPush = (lastPush) => {
+  let msSince = Date.now() - Date.parse(lastPush)
+  if (msSince < 0)
+    return 0
+
+  return Math.ceil((Date.now() - Date.parse(lastPush)) / 86400000)
+}

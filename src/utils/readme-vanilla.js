@@ -4,17 +4,28 @@ import Parser from 'html-react-parser'
 import domToReact from 'html-react-parser/lib/dom-to-react';
 import { Link } from 'react-router-dom'
 import { animateScroll } from 'react-scroll'
-import _endsWith from 'lodash/endsWith'
 
 import { getCategoryFromUrl } from './misc'
 
+if (window.Element && !Element.prototype.closest) {
+  Element.prototype.closest = function(s) {
+    var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+      i,
+      el = this;
+    do {
+      i = matches.length;
+      while (--i >= 0 && matches.item(i) !== el) {};
+    } while ((i < 0) && (el = el.parentElement));
+    return el;
+  };
+}
+
 const HashLink = (props) => {
   const handleScroll = (e) => {
-    const heading = $('#user-content-' + e.target.hash.substr(1)).parent()
-    const top = heading.offset().top
+    const heading = $(e.target).parent()
+    console.log(heading);
     // const pos = document.getElementById('user-content-' + e.target.hash.substr(1)).getBoundingClientRect()
-    animateScroll.scrollTo(top - 10)
-    // Velocity(heading[0], 'scroll', { duration: 1000, easing: 'ease' });
+    // animateScroll.scrollTo(pos.top, { smooth: 'easeInOutCubic', duration: 300 })
   }
 
   return (
@@ -22,7 +33,7 @@ const HashLink = (props) => {
   )
 }
 
-export default (things, repo, readme, router) => {
+export default (things, repo, readme) => {
 
   if (!readme) return null
 
@@ -66,7 +77,7 @@ export default (things, repo, readme, router) => {
 
   // repair hash links
   body.find('a[href^="#"]:not(.anchor)').each((i, el) => {
-    // let href = $(el).attr('href').substr(1)
+    let href = $(el).attr('href').substr(1)
 
     $(el)
       // .attr('href', '#user-content-' + href)
@@ -108,7 +119,7 @@ export default (things, repo, readme, router) => {
   // console.log(body.find('table'));
   body.find('table, thead, tbody, tr').each((i, el) => {
     $(el).contents().filter(function() {
-      // console.log(this.nodeType);
+      console.log(this.nodeType);
       return this.nodeType === 3
     }).remove();
   })
@@ -118,59 +129,36 @@ export default (things, repo, readme, router) => {
       if (!domNode.attribs) return;
 
       else if (domNode.name === 'a') {
-        let { href, target, ...props } = domNode.attribs;
+        let { href, ...props } = domNode.attribs;
 
-        if (props['data-internal-link']) {
-          if (_endsWith(href, 'sindresorhus/awesome'))
-            return <Link {...props} to="/">{domToReact(domNode.children, options)}</Link>
-
+        if (props['data-internal-link'])
           return <Link {...props} to={href}>{domToReact(domNode.children, options)}</Link>
-        }
 
         if (props['data-hash-link']) {
           return <HashLink {...domNode.attribs}>{domToReact(domNode.children, options)}</HashLink>
         }
-
-        // if (props['data-github-raw']) {
-        //   if (href.indexOf('/blob/master/') > -1 && _endsWith(href, '.md')) {
-        //     const content = router.location.pathname + href.split('/blob/master')[1].replace('.md', '--md')
-        //     return <Link {...props} to={content}>{domToReact(domNode.children, options)}</Link>
-        //   }
-        // }
       }
 
       else if (domNode.name === 'img') {
         let { align, style, ...props } = domNode.attribs;
 
-        // let className = props.class
+        let className = props.class
         delete props.class
 
-        style = {}
-
         if (align === 'absmiddle') {
-          style = {
-            verticalAlign: 'middle'
-          }
+          className = 'v-mid'
         }
         if (align === 'left') {
-          style = {
-            float: 'left',
-            paddingRight: '0.5rem'
-          }
+          className = 'fl pr2'
         }
         if (align === 'center') {
-          style = {
-            textAlign: 'center'
-          }
+          className = 'tc'
         }
         if (align === 'right') {
-          style = {
-            float: 'right',
-            paddingLeft: '0.5rem'
-          }
+          className = 'fr pl2'
         }
 
-        return <img {...props} style={style} />
+        return <img {...props} className={className} />
       }
 
       else if (['h1', 'p'].indexOf(domNode.name) > -1) {
@@ -178,27 +166,18 @@ export default (things, repo, readme, router) => {
 
         const Tag = domNode.name
 
-        style = {}
-
+        let className
         if (align === 'left') {
-          style = {
-            float: 'left',
-            paddingRight: '0.5rem'
-          }
+          className = 'fl pr2'
         }
         if (align === 'center') {
-          style = {
-            textAlign: 'center'
-          }
+          className = 'tc'
         }
         if (align === 'right') {
-          style = {
-            float: 'right',
-            paddingLeft: '0.5rem'
-          }
+          className = 'fr pl2'
         }
 
-        return <Tag {...props} style={style}>{domToReact(domNode.children, options)}</Tag>
+        return <Tag {...props} className={className}>{domToReact(domNode.children, options)}</Tag>
       }
 
     }

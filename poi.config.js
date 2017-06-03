@@ -2,6 +2,7 @@ const path = require('path');
 const pkg = require('./package.json');
 
 module.exports = options => ({
+
   port: 4000,
   entry: 'src/index.js',
 
@@ -32,4 +33,5 @@ module.exports = options => ({
         .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
     }
   }
+
 })

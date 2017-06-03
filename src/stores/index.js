@@ -1,15 +1,16 @@
 import remotedev from 'mobx-remotedev'
-import { observable, action } from 'mobx'
+import { observable } from 'mobx'
 import nprogress from 'nprogress'
 import _each from 'lodash/each'
 
 @remotedev
 export class BaseStore {
-  @observable loading = true
+  @observable loading = false
   @observable.shallow things = []
   @observable.shallow flatThings = []
 
   @observable searchTerm = ''
+  @observable sortType = 'default'
   @observable.shallow categoryResults = []
   @observable.shallow itemResults = []
 

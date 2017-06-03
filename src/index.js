@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import createBrowserHistory from 'history/createBrowserHistory'
 import { Provider } from 'mobx-react'
@@ -28,29 +28,23 @@ const stores = {
 
 const history = syncHistoryWithStore(browserHistory, routerStore)
 
-render(
-  <Provider {...stores}>
-    <Router history={history}>
-      <App />
-    </Router>
-  </Provider>,
+const render = Component => {
+  ReactDOM.render(
+    <Provider {...stores}>
+      <Router history={history}>
+        <AppContainer>
+          <Component />
+        </AppContainer>
+      </Router>
+    </Provider>,
 
-  document.getElementById('app')
-)
+    document.getElementById('app')
+  )
+}
+
+render(App)
 
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('@/components/App', () => {
-    const NextApp = require('@/components/App').default
-    render(
-      <Provider {...stores}>
-        <Router history={history}>
-          <AppContainer>
-            <NextApp />
-          </AppContainer>
-        </Router>
-      </Provider>,
-      document.getElementById('app')
-    )
-  })
+  module.hot.accept('@/components/App', () => render(App))
 }
