@@ -10,11 +10,16 @@ import { getCategoryFromUrl } from './misc'
 
 const HashLink = (props) => {
   const handleScroll = (e) => {
-    const heading = $('#user-content-' + e.target.hash.substr(1)).parent()
-    const top = heading.offset().top
-    // const pos = document.getElementById('user-content-' + e.target.hash.substr(1)).getBoundingClientRect()
-    animateScroll.scrollTo(top - 10)
-    // Velocity(heading[0], 'scroll', { duration: 1000, easing: 'ease' });
+    try {
+      const hash = e.target.hash.substr(1)
+      const heading = $(`#user-content-${hash}, [name="user-content-${hash}"`).parent()
+      const top = heading.offset().top
+      window.scroll(0, top - 10)
+      // const pos = document.getElementById('user-content-' + e.target.hash.substr(1)).getBoundingClientRect()
+      // animateScroll.scrollTo(top - 10, { duration: 700 })
+      // Velocity(heading[0], 'scroll', { duration: 1000, easing: 'ease' });
+    }
+    catch (e) {}
   }
 
   return (
@@ -26,7 +31,7 @@ export default (things, repo, readme, router) => {
 
   if (!readme) return null
 
-  console.log('processing readme');
+  // console.log('processing readme');
 
   // repair class attributes
   readme = readme.replace(/class=["']([a-zA-Z0-9:;\.\s\(\)\-\,]*)["']/, 'className="$1"')

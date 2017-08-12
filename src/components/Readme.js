@@ -17,6 +17,14 @@ import { daysSinceLastPush } from '@/utils/misc'
 import processReadme from '../utils/readme'
 import { token } from '../../github.json'
 
+const Placeholder = ({ rows, ready }) => {
+  return (
+    <ReactPlaceholder type='text' rows={rows} ready={ready} color="#e1e4e8">
+      <div></div>
+    </ReactPlaceholder>
+  )
+}
+
 @inject('router', 'base', 'repo')
 @withRouter
 @observer
@@ -130,55 +138,57 @@ export default class Readme extends PureComponent {
           </Helmet>
         }
 
-        <div className="readme">
-          <ReactPlaceholder type='text' rows={20} ready={ready} color="#e1e4e8">
-            {ready &&
-              <div>
+        <div className="info">
+          <Placeholder rows={1} ready={ready} />
+          {ready &&
+            <div>
+              <h3 className="repo">
+                <span className="stars">
+                  <i className="fa fa-star"></i>&nbsp;
+                  {info.stargazers_count}
+                </span>
 
-                <div className="description">
-                  {info.homepage &&
-                    <a className="homepage" href={info.homepage} target="_blank" rel="noopener noreferrer">
-                      {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
-                    </a>
-                  }
+                {' '}
 
-                  <Emojione svg text={info.description} />
-                </div>
+                {info.owner && <a href={info.owner.html_url} target="_blank" rel="noopener noreferrer">{info.owner.login}</a>}
+                {' / '}
+                <a href={info.html_url} target="_blank" rel="noopener noreferrer">{info.name}</a>
+              </h3>
 
-                <div className="info">
-                  <h3 className="repo">
-                    {info.owner && <a href={info.owner.html_url} target="_blank" rel="noopener noreferrer">{info.owner.login}</a>}
-
-                    {' / '}
-
-                    <a href={info.html_url} target="_blank" rel="noopener noreferrer">{info.name}</a>
-
-                    {' '}
-
-                    <span className="stars">
-                      {info.stargazers_count}&nbsp;
-                      <i className="fa fa-star"></i>
-                    </span>
-                  </h3>
-
-                  <div className="last-commit">
-                    <Dot date={lastCommit.commit.author.date} />
-                    Last commit&nbsp;
-                    <a href={lastCommit.html_url} target="_blank" rel="noopener noreferrer">
-                      {timeago().format(lastCommit.commit.author.date)}
-                    </a>
-                    &nbsp;by&nbsp;
-                    <a href={lastCommit.author.html_url} target="_blank" rel="noopener noreferrer">
-                      {lastCommit.author.login}
-                    </a>
-                  </div>
-                </div>
-
-                {processReadme(this.props.base.things, repo, readme, router)}
-
+              <div className="last-commit">
+                <Dot date={lastCommit.commit.author.date} />
+                Last commit&nbsp;
+                <a href={lastCommit.html_url} target="_blank" rel="noopener noreferrer">
+                  {timeago().format(lastCommit.commit.author.date)}
+                </a>
+                &nbsp;by&nbsp;
+                <a href={lastCommit.author.html_url} target="_blank" rel="noopener noreferrer">
+                  {lastCommit.author.login}
+                </a>
               </div>
-            }
-          </ReactPlaceholder>
+            </div>
+          }
+        </div>
+
+        <div className="readme">
+          <Placeholder rows={40} ready={ready} />
+          {ready &&
+            <div>
+
+              <div className="description">
+                {info.homepage &&
+                  <a className="homepage" href={info.homepage} target="_blank" rel="noopener noreferrer">
+                    {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
+                  </a>
+                }
+
+                <Emojione svg text={info.description} />
+              </div>
+
+              {processReadme(this.props.base.things, repo, readme, router)}
+
+            </div>
+          }
         </div>
       </div>
     );

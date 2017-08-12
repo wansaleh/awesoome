@@ -31,7 +31,7 @@ body {
   color: $black;
   font-weight: 300;
   // line-height: 1;
-  letter-spacing: -.03em;
+  letter-spacing: -.02em;
 }
 
 body, #app, [data-reactroot] {
@@ -57,8 +57,18 @@ label, label > span {
   margin-bottom: 0;
 }
 
-.container {
-  padding: 2rem 0 4rem;
+// .container {
+//   padding: 2rem 0 4rem;
+// }
+
+.nav {
+  // position: fixed;
+  // left: 0;
+  // right: 0;
+  background: #fff;
+  color: $gray-300;
+  padding: 2rem 0;
+  box-shadow: 0 1px 0 $gray-200;
 }
 
 header {
@@ -69,6 +79,10 @@ header {
 
   h1 {
     font-weight: 900;
+
+    a:hover {
+      color: $gray-600;
+    }
   }
 
   .search {
@@ -106,14 +120,14 @@ header {
 }
 
 .categories {
-  margin-bottom: 2rem;
-  line-height: 1.2;
+  // margin-bottom: 2rem;
+  line-height: 1;
 
   ul {
     list-style: none;
     margin: 0 -.6rem;
     padding: 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 300;
 
     li {
@@ -122,8 +136,8 @@ header {
 
       &:not(:last-of-type):after {
         content: "/";
-        color: $gray-200;
-        font-weight: 900;
+        // color: $gray-200;
+        // font-weight: 900;
       }
 
       a {
@@ -139,12 +153,45 @@ header {
           color: $brand;
         }
       }
+
+      .result-count {
+        margin-left: .3em;
+        padding: .1em .2em;
+        font-size: 1rem;
+        font-weight: 500;
+        background: $gray-500;
+        color: #fff;
+        border-radius: 5px;
+      }
     }
   }
 }
 
 .sidebar {
   height: 100%;
+}
+
+.sidebar-sticky {
+  padding-top: 2rem;
+}
+
+.categories-2 {
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .show-toggle {
+      font-size: .8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
 }
 
 .stars {
@@ -186,11 +233,19 @@ header {
 }
 
 .sort {
-  margin: 2rem 0 .25rem;
+  position: relative;
+  margin: 0 0 .25rem;
+
+  h6 {
+    position: absolute;
+    display: inline-block;
+    transform: translate(-120%, 10%);
+    color: $gray-400;
+  }
 
   .btn-group {
     display: flex;
-    flex: row wrap;
+    flex-flow: row wrap;
 
     .btn {
       flex: 1 1 25%;
@@ -214,7 +269,7 @@ header {
   h2 {
     color: $text-gray-light;
     font-weight: 100;
-    margin: 2rem 0 .5rem;
+    margin: 0 0 1rem;
     line-height: 1;
 
     // &:before {
@@ -232,9 +287,9 @@ header {
     font-size: 1rem;
 
     ul.items {
-      font-size: .85em;
+      font-size: .85rem;
       margin-bottom: 1rem;
-      padding-left: 1.5rem;
+      padding-left: 1rem;
     }
   }
 
@@ -255,7 +310,7 @@ header {
       justify-content: space-between;
       align-items: center;
       color: inherit;
-      letter-spacing: -.05em;
+      // letter-spacing: -.05em;
       padding: .3rem 0;
 
       a {
@@ -313,9 +368,9 @@ header {
     }
   }
 
-  &.lists .links:not(.highlight) {
-    display: none;
-  }
+  // &.lists .links:not(.highlight) {
+  //   // display: none;
+  // }
 }
 
 .readme {
@@ -326,6 +381,7 @@ header {
   // box-shadow: $box-shadow;
   border: $border;
   padding: 1rem;
+  margin-bottom: 2rem;
 
   @include media-breakpoint-up(md) {
     padding: 2rem;
@@ -333,12 +389,16 @@ header {
 }
 
 .info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   line-height: 1;
   font-size: .85rem;
-  margin-bottom: 3rem;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .repo {
@@ -353,8 +413,13 @@ header {
   }
 
   .stars {
-    font-size: .8em;
+    font-size: .85em;
+    font-weight: 600;
     vertical-align: bottom;
+    background: $gray-400;
+    color: #fff;
+    border-radius: 3px;
+    padding: .1em .2em;
   }
 }
 
@@ -396,6 +461,33 @@ footer {
   color: $gray-400;
   font-size: .8rem;
   text-align: right;
+}
+
+.back-to-top {
+  display: block;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  padding: .6rem;
+  border-radius: 50%;
+  background: $gray-400;
+  color: #fff;
+  transition: all .3s ease;
+  transform: translateY(180%);
+
+  svg path {
+    fill: #fff;
+  }
+
+  &:hover {
+    background: $gray-600;
+  }
+
+  &.show {
+    transform: translateY(0);
+  }
 }
 
 // .content-modal {

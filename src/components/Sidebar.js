@@ -5,7 +5,9 @@ import { NavLink } from 'react-router-dom'
 import { StickyContainer, Sticky } from 'react-sticky'
 // import Parser from 'html-react-parser'
 import _find from 'lodash/find'
+import _filter from 'lodash/filter'
 import _orderBy from 'lodash/orderBy'
+import _includes from 'lodash/includes'
 import cls from 'classnames'
 import Dot from './Dot'
 // import { daysSinceLastPush } from '@/utils/misc'
@@ -20,7 +22,7 @@ const capitalizeFirstLetter = (string) => {
 export default class Sidebar extends Component {
   constructor(props) {
     super(props)
-    this.sortTypes = ['title', 'date', 'stars', 'default']
+    this.sortTypes = ['title', 'date', 'stars']
   }
 
   get(category) {
@@ -46,9 +48,20 @@ export default class Sidebar extends Component {
     this.props.base.current = null
   }
 
-  getLink(repo) {
+  getLink(item) {
     const { match } = this.props
-    return '/' + match.params.category + '/' + repo
+
+    // if (parentTitle)
+    //   return `/${match.params.category}/${parentTitle}/${repo}`
+console.log(item);
+    return `/${match.params.category}/${item.id}`
+    // return '/' + match.params.category + '/' + repo
+  }
+
+  isCategoryFound(id) {
+    if (!this.props.base.categoryResults)
+      return false
+    return this.props.base.categoryResults.includes(id)
   }
 
   isItemFound(id) {
@@ -61,7 +74,12 @@ export default class Sidebar extends Component {
   }
 
   handleSort(sortType) {
-    this.props.base.sortType = sortType
+    if (this.props.base.sortType === sortType) {
+      this.props.base.sortType = 'default'
+    }
+    else {
+      this.props.base.sortType = sortType
+    }
   }
 
   sortItems(items) {
@@ -90,49 +108,60 @@ export default class Sidebar extends Component {
     return sortedItems
   }
 
-  renderItems(items) {
+  renderItems(items, parentTitle = null) {
+    const { searchTerm, itemResults } = this.props.base
+
     if (!items) return null
 
-    return this.sortItems(items).map((item, i) =>
-      <li key={i} data-id={item.id}>
+    items = _filter(items, item => {
+      if (!searchTerm || itemResults.length === 0)
+        return true
 
-        <div className={cls("links", { highlight: this.isItemFound(item.id) })} data-id={item.id}>
+      return _includes(itemResults, item.id)
+    })
 
-          <NavLink
-            to={this.getLink(item.id)}
-            className={cls("link")}
-            activeClassName="active">
+    return this.sortItems(items).map((item, i) => {
+      return (
+        <li key={i} data-id={item.id}>
 
-            <span className="title" dangerouslySetInnerHTML={{__html: item.title}} />
+          <div className={cls("links")} data-id={item.id}>
 
-            <span className="stars">
-              {item.stargazers}&nbsp;
-              <i className="fa fa-star"></i>
-            </span>
+            <NavLink
+              to={this.getLink(item)}
+              className={cls("link")}
+              activeClassName="active">
 
-            <Dot date={item.last_commit} />
+              <span className="title" dangerouslySetInnerHTML={{__html: item.title}} />
 
-          </NavLink>
+              {/*<span className="stars">
+                {item.stargazers}&nbsp;
+                <i className="fa fa-star"></i>
+              </span>*/}
 
-          <a href={item.url} className="github" target="_blank" rel="noopener noreferrer">
-            <i className="fa fa-github" />
-          </a>
+              <Dot date={item.last_commit} />
 
-        </div>
+            </NavLink>
 
-        {item.items &&
-          <ul className="items">
-            {this.renderItems(item.items)}
-          </ul>
-        }
+            <a href={item.url} className="github" target="_blank" rel="noopener noreferrer">
+              <i className="fa fa-github" />
+            </a>
 
-      </li>
-    )
+          </div>
+
+          {item.items &&
+            <ul className="items">
+              {this.renderItems(item.items, item.title)}
+            </ul>
+          }
+
+        </li>
+      )
+    })
   }
 
   render() {
     const { match } = this.props
-    const { sortType } = this.props.base
+    const { things, sortType, searchTerm } = this.props.base
     const current = this.get(match.params.category)
 
     if (!current) return null
@@ -144,8 +173,36 @@ export default class Sidebar extends Component {
         <Sticky>
           {
             ({ style, isSticky }) =>
-              <div style={style} className={cls({ sticky: isSticky })}>
-                <div className="sort">
+              <div style={style} className={cls("sidebar-sticky", { sticky: isSticky })}>
+                {/* <div className="categories-2">
+                  <h2>
+                    Category
+                    <span className="show-toggle">Show All</span>
+                  </h2>
+
+                  {things &&
+                    <ul className="list">
+                      {things.map(item => {
+                        if (searchTerm && !this.isCategoryFound(item.id))
+                          return null
+
+                        return (
+                          <li
+                            className=""
+                            key={item.id}
+                            data-id={item.id}>
+                            <NavLink to={`/${item.id}`}
+                              activeClassName="active">
+                              {item.title}
+                            </NavLink>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  }
+                </div> */}
+
+                {/* <div className="sort">
                   <div className="BtnGroup btn-group">
                     {this.sortTypes.map((type, i) =>
                       <button
@@ -157,13 +214,7 @@ export default class Sidebar extends Component {
                       </button>
                     )}
                   </div>
-                </div>
-
-                <div className="legends">
-                  <span className="legend"><Dot className="hot" /> {'<'} 1 week</span>
-                  <span className="legend"><Dot className="new" /> {'<'} 1 month</span>
-                  <span className="legend"><Dot className="old" /> {'>'} 6 months </span>
-                </div>
+                </div> */}
 
                 <h2>
                   {current.title}
@@ -172,6 +223,13 @@ export default class Sidebar extends Component {
                 <ul className="items list lh-copy">
                   {this.renderItems(current.items)}
                 </ul>
+
+                <div className="legends">
+                  <span className="legend"><Dot className="hot" /> {'<'} 1 week</span>
+                  <span className="legend"><Dot className="new" /> {'<'} 1 month</span>
+                  <span className="legend"><Dot className="old" /> {'>'} 6 months </span>
+                </div>
+
               </div>
           }
         </Sticky>
