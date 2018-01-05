@@ -14,6 +14,8 @@ export class BaseStore {
   @observable.shallow categoryResults = []
   @observable.shallow itemResults = []
 
+  @observable showBackToTop = false
+
   constructor(router) {
     this.router = router
   }

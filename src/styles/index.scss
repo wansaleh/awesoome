@@ -68,7 +68,7 @@ label, label > span {
   background: #fff;
   color: $gray-300;
   padding: 2rem 0;
-  box-shadow: 0 1px 0 $gray-200;
+  // box-shadow: 0 0 10px $gray-200;
 }
 
 header {
@@ -379,7 +379,7 @@ header {
   border-radius: 4px;
   // box-shadow: 0 1px 2px rgba($black, .2), 0 4px 10px rgba($black, .05);
   // box-shadow: $box-shadow;
-  border: $border;
+  // border: $border;
   padding: 1rem;
   margin-bottom: 2rem;
 
@@ -441,7 +441,7 @@ header {
 
   color: $gray-400;
   padding: 1rem;
-  border: 1px solid $gray-200;
+  border: 1px solid darken($gray-100, 5);
   // box-shadow: inset 0 0 .4rem 0 rgba($black, .1);
   border-radius: 3px;
   background: $gray-000;
@@ -455,27 +455,40 @@ header {
 }
 
 footer {
-  position: absolute;
-  bottom: 1rem;
-  right: 15px;
+  display: flex;
+  position: fixed;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  // right: 15px;
   color: $gray-400;
   font-size: .8rem;
   text-align: right;
+  justify-content: flex-end;
+
+  > p {
+    display: inline-block;
+    background: $gray-100;
+    margin: 0;
+    margin-right: -.5em;
+    padding: .25em .5em;
+    border-radius: 4px;
+  }
 }
 
 .back-to-top {
   display: block;
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 3rem;
-  height: 3rem;
-  padding: .6rem;
+  bottom: 1rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  padding: .4rem;
   border-radius: 50%;
-  background: $gray-400;
+  background: $gray-300;
   color: #fff;
   transition: all .3s ease;
-  transform: translateY(180%);
+  // transform: translateY(180%);
 
   svg path {
     fill: #fff;
@@ -485,9 +498,9 @@ footer {
     background: $gray-600;
   }
 
-  &.show {
-    transform: translateY(0);
-  }
+  // &.show {
+  //   transform: translateY(0);
+  // }
 }
 
 // .content-modal {

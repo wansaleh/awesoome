@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { withRouter } from 'react-router'
 import fetch from 'unfetch'
@@ -10,10 +10,10 @@ import { animateScroll } from 'react-scroll'
 import { Helmet } from 'react-helmet'
 import ReactPlaceholder from 'react-placeholder'
 import _isEmpty from 'lodash/isEmpty'
-import cls from 'classnames'
+// import cls from 'classnames'
 
 import Dot from './Dot'
-import { daysSinceLastPush } from '@/utils/misc'
+// import { daysSinceLastPush } from '@/utils/misc'
 import processReadme from '../utils/readme'
 import { token } from '../../github.json'
 
@@ -28,7 +28,7 @@ const Placeholder = ({ rows, ready }) => {
 @inject('router', 'base', 'repo')
 @withRouter
 @observer
-export default class Readme extends PureComponent {
+export default class Readme extends Component {
   // constructor(props) {
   //   super(props)
   //   this.baseState = this.props.base
