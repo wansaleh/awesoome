@@ -165,12 +165,7 @@ export default class App extends Component {
           </div>
         </div>
 
-        {/*<div>
-          {categoryResults && categoryResults.map((result, i) =>
-            <span key={i} style={{marginRight: '1rem'}}>{result}</span>
-          )}
-        </div>*/}
-
+        {/* ROUTE DEFINITIONS */}
         <Route render={({ location, history, match }) => (
           <div className="container">
             <Route exact path="/" component={Home} />

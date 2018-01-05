@@ -26,6 +26,7 @@ export class BaseStore {
       this.loading = true
       nprogress.inc()
 
+      // fetch(`https://api.awesoo.me/things`)
       fetch(`https://api.awesoo.me/things`)
       .then(res => res.json())
       .then(data => {

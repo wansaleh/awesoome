@@ -53,7 +53,7 @@ export default class Sidebar extends Component {
 
     // if (parentTitle)
     //   return `/${match.params.category}/${parentTitle}/${repo}`
-console.log(item);
+
     return `/${match.params.category}/${item.id}`
     // return '/' + match.params.category + '/' + repo
   }
