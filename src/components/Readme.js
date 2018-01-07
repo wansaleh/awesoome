@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { inject, observer } from 'mobx-react'
 import { withRouter } from 'react-router'
 import fetch from 'unfetch'
@@ -130,7 +130,7 @@ export default class Readme extends Component {
       !_isEmpty(readme))
 
     return (
-      <div>
+      <Fragment>
         {info &&
           <Helmet>
             <title>{info.name}</title>
@@ -190,7 +190,7 @@ export default class Readme extends Component {
             </div>
           }
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

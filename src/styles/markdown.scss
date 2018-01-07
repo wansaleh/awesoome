@@ -4,7 +4,7 @@
   a {
     // display: inline-block;
     position: relative;
-    color: $brand;
+    color: $md-blue-a400;
     z-index: 1;
 
     // &:after {
@@ -69,6 +69,20 @@
   h2 {
     font-size: 2rem;
     font-weight: 700;
+    padding-bottom: 0;
+    z-index: 1;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: calc(50% - .5em);
+      left: -2rem;
+      height: 1em;
+      width: .8em;
+      background: $gray-200;
+      z-index: -1;
+      border-radius: 0 5px 5px 0;
+    }
   }
 
   h3, h4, h5, h6 {
@@ -77,6 +91,12 @@
 
   h4, h5, h6 {
     padding-bottom: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    a.anchor {
+      float: right;
+    }
   }
 
   blockquote {
@@ -89,5 +109,142 @@
 
   g-emoji {
     margin-right: .25em;
+  }
+
+  .highlight {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    background: $gray-100;
+
+    pre {
+      margin: 0 2rem;
+      padding: 1rem 0;
+      border-radius: 0;
+      background: none;
+    }
+  }
+
+  .pl-c {
+    color: $gray-400;
+  }
+
+  .pl-c1,
+  .pl-s .pl-v {
+    color: $md-blue-a200;
+  }
+
+  .pl-e,
+  .pl-en {
+    color: $md-purple-a700;
+  }
+
+  .pl-smi,
+  .pl-s .pl-s1 {
+    color: $gray-800;
+  }
+
+  .pl-ent {
+    color: $md-teal-a700;
+  }
+
+  .pl-k {
+    color: $md-red-a400;
+  }
+
+  .pl-s,
+  .pl-pds,
+  .pl-s .pl-pse .pl-s1,
+  .pl-sr,
+  .pl-sr .pl-cce,
+  .pl-sr .pl-sre,
+  .pl-sr .pl-sra {
+    color: $md-blue-900;
+  }
+
+  .pl-v,
+  .pl-smw {
+    color: $md-orange-a700;
+  }
+
+  .pl-bu {
+    color: $md-red-700;
+  }
+
+  .pl-ii {
+    color: #fafbfc;
+    background-color: $md-red-700;
+  }
+
+  .pl-c2 {
+    color: #fafbfc;
+    background-color: $md-red-a400;
+  }
+
+  .pl-c2::before {
+    content: "^M";
+  }
+
+  .pl-sr .pl-cce {
+    font-weight: bold;
+    color: $md-teal-a700;
+  }
+
+  .pl-ml {
+    color: #735c0f;
+  }
+
+  .pl-mh,
+  .pl-mh .pl-en,
+  .pl-ms {
+    font-weight: bold;
+    color: $md-blue-a200;
+  }
+
+  .pl-mi {
+    font-style: italic;
+    color: $gray-800;
+  }
+
+  .pl-mb {
+    font-weight: bold;
+    color: $gray-800;
+  }
+
+  .pl-md {
+    color: $md-red-700;
+    background-color: #ffeef0;
+  }
+
+  .pl-mi1 {
+    color: $md-teal-a700;
+    background-color: #f0fff4;
+  }
+
+  .pl-mc {
+    color: $md-orange-a700;
+    background-color: #ffebda;
+  }
+
+  .pl-mi2 {
+    color: #f6f8fa;
+    background-color: $md-blue-a200;
+  }
+
+  .pl-mdr {
+    font-weight: bold;
+    color: $md-purple-a700;
+  }
+
+  .pl-ba {
+    color: #586069;
+  }
+
+  .pl-sg {
+    color: #959da5;
+  }
+
+  .pl-corl {
+    text-decoration: underline;
+    color: $md-blue-900;
   }
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { inject, observer } from 'mobx-react'
 import { Route, Link, NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
@@ -7,16 +7,21 @@ import cls from 'classnames'
 import Fuse from 'fuse.js'
 // import _map from 'lodash/map'
 import _isEmpty from 'lodash/isEmpty'
-import _debounce from 'lodash/debounce'
+// import _debounce from 'lodash/debounce'
 import { Helmet } from 'react-helmet'
 import ReactPlaceholder from 'react-placeholder'
-import { animateScroll } from 'react-scroll'
+// import { animateScroll } from 'react-scroll'
+// import { slide as Menu } from 'react-burger-menu'
+// import windowDimensions from 'react-window-dimensions';
+// import timeAgo from 'epoch-timeago';
+import TimeAgo from 'react-timeago'
 
 import Sidebar from './Sidebar'
 import Readme from './Readme'
 // import Content from './Content'
 // import Testing from './Testing'
 import { repo } from '../../github.json'
+// import SidebarContents from './SidebarContents';
 
 const fuseOptions = {
   id: 'id',
@@ -68,14 +73,14 @@ export default class App extends Component {
   //   deb()
   // }
 
-  hightlightCategories() {
+  highlightCategories() {
     const { things, searchTerm } = this.props.base
     const fuse = new Fuse(things, fuseOptionsCategory)
     const result = fuse.search(searchTerm)
     this.props.base.categoryResults = result
   }
 
-  hightlightItems() {
+  highlightItems() {
     const { flatThings, searchTerm } = this.props.base
     const fuse = new Fuse(flatThings, fuseOptionsItem)
     const result = fuse.search(searchTerm)
@@ -90,13 +95,17 @@ export default class App extends Component {
 
   handleSearch(e) {
     this.props.base.searchTerm = e.target.value
-    this.hightlightCategories()
-    this.hightlightItems()
+    this.highlightCategories()
+    this.highlightItems()
   }
 
-  backToTop(e) {
-    animateScroll.scrollTo(0, { duration: 300 })
+  clearSearch = (e) => {
+    this.props.base.searchTerm = ''
   }
+
+  // backToTop(e) {
+  //   animateScroll.scrollTo(0, { duration: 300 })
+  // }
 
   componentWillUnmount() {
     this.props.base.loading = false
@@ -115,86 +124,103 @@ export default class App extends Component {
     const { things, searchTerm, categoryResults } = this.props.base
 
     return (
-      <div>
+      <div id="outer-container">
         <Helmet titleTemplate="%s - Awesoo.me">
           <title>Home</title>
         </Helmet>
 
-        <div className="nav">
-          <header className="container">
-            <h1>
-              <Link to="/"><Emojione svg text=":sunglasses: Awesoo.me" /></Link>
-            </h1>
+        {/* <Menu
+          pageWrapId="page-wrap"
+          outerContainerId="outer-container"
+          burgerButtonClassName={cls({ show: this.props.base.showBurger })}
+        >
+          <Route path="/:category" component={SidebarContents}></Route>
+        </Menu> */}
 
-            <div className="search">
-              <input
-                className="form-control"
-                type="search" placeholder="Search something awesome..."
-                value={searchTerm}
-                onChange={this.handleSearch.bind(this)} />
+        <main id="page-wrap">
+          <div className="nav">
+            <header className="container">
+              <h1>
+                <Link to="/" onClick={this.clearSearch}><Emojione svg text=":sunglasses: Awesoo.me" /></Link>
+              </h1>
+
+              <div className="search">
+                <input
+                  className="form-control"
+                  type="search" placeholder="Search something awesome..."
+                  value={searchTerm}
+                  onChange={this.handleSearch.bind(this)} />
+              </div>
+            </header>
+
+            <div className={cls("container categories", { searching: searchTerm !== '' })}>
+              <ReactPlaceholder type='text' rows={1} ready={!_isEmpty(things)} color="#e1e4e8">
+                {things &&
+                  <ul className="list">
+                    {things.map(item =>
+                      <li
+                        className={cls("dib", { highlight: this.isCategoryFound(item.id) })}
+                        key={item.id}
+                        data-id={item.id}>
+                        <NavLink to={`/${item.id}`}
+                          activeClassName="active"
+                          disabled={searchTerm !== '' && !this.isCategoryFound(item.id)}
+                        >
+                          {item.title}
+                          {/* {this.isCategoryFound(item.id) && <span className="result-count">10</span>} */}
+                        </NavLink>
+                      </li>
+                    )}
+                  </ul>
+                }
+              </ReactPlaceholder>
             </div>
-          </header>
+          </div>
 
-          <div className={cls("container categories", { searching: searchTerm !== '' })}>
-            <ReactPlaceholder type='text' rows={6} ready={!_isEmpty(things)} color="#e1e4e8">
-              {things &&
-                <ul className="list">
-                  {things.map(item =>
-                    <li
-                      className={cls("dib", { highlight: this.isCategoryFound(item.id) })}
-                      key={item.id}
-                      data-id={item.id}>
-                      <NavLink to={`/${item.id}`}
-                        activeClassName="active">
-                        {item.title}
-                        {/* {this.isCategoryFound(item.id) && <span className="result-count">10</span>} */}
-                      </NavLink>
-                    </li>
-                  )}
-                </ul>
+          {/* ROUTE DEFINITIONS */}
+          <Route render={({ location, history, match }) => (
+            <div className="container">
+              <Route exact path="/" component={Home}></Route>
+
+              <div className="row">
+                <div className={cls("col-md-3 lists", { searching: searchTerm !== '' })}>
+                  <Route path="/:category" component={Sidebar}></Route>
+                </div>
+                <div className="col-md-9">
+                  <Route exact path="/:category/:item/:subitem/:owner/:repo" component={Readme}></Route>
+                  <Route exact path="/:category/:owner/:repo" component={Readme}></Route>
+                </div>
+                {/*<Route path="/:category/:owner/:repo/:content" component={Content} />*/}
+              </div>
+            </div>
+          )} ></Route>
+
+          <footer className="container">
+            <p>
+              Created from the <a href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">Awesome List</a>
+              {' '}
+              by <a href={`https://github.com/sindresorhus`} target="_blank" rel="noopener noreferrer">sindresorhus</a>
+              {' / '}
+              <a href="https://github.com/wansaleh/awesoome" target="_blank" rel="noopener noreferrer">Source</a>
+              {' / '}
+              <Emojione svg text="With 💋 from 🇲🇾" />
+              {' / '}
+              {this.props.base.info &&
+                <span>Last fetch: <TimeAgo date={this.props.base.info.last_updated} /></span>
               }
-            </ReactPlaceholder>
-          </div>
-        </div>
+            </p>
+          </footer>
 
-        {/* ROUTE DEFINITIONS */}
-        <Route render={({ location, history, match }) => (
-          <div className="container">
-            <Route exact path="/" component={Home} />
-            <div className="row mt4">
-              <div className={cls("col-md-3 pb5 lists", { searching: searchTerm !== '' })}>
-                <Route path="/:category" component={Sidebar} />
-              </div>
-              <div className="col-md-9">
-                <Route exact path="/:category/:item/:subitem/:owner/:repo" component={Readme} />
-                <Route exact path="/:category/:owner/:repo" component={Readme} />
-              </div>
-              {/*<Route path="/:category/:owner/:repo/:content" component={Content} />*/}
-            </div>
-          </div>
-        )} />
-
-        <footer className="container">
-          <p>
-            Created from the <a href={`https://github.com/${repo}`} target="_blank" rel="noopener noreferrer">Awesome List</a>
-            {' '}
-            by <a href={`https://github.com/sindresorhus`} target="_blank" rel="noopener noreferrer">sindresorhus</a>
-            {' / '}
-            <a href="https://github.com/wansaleh/awesoome" target="_blank" rel="noopener noreferrer">Source</a>
-            {' / '}
-            <Emojione svg text="With 💋 from 🇲🇾" />
-          </p>
-        </footer>
-
-        {/*<a
-          className={cls("back-to-top", { 'show': this.props.base.showBackToTop })}
-          href="#" onClick={this.backToTop.bind(this)}>
-          <svg viewBox="0 0 129 129" enableBackground="new 0 0 129 129">
-            <g>
-              <path d="m121.4,61.6l-54-54c-0.7-0.7-1.8-1.2-2.9-1.2s-2.2,0.5-2.9,1.2l-54,54c-1.6,1.6-1.6,4.2 0,5.8 0.8,0.8 1.8,1.2 2.9,1.2s2.1-0.4 2.9-1.2l47-47v98.1c0,2.3 1.8,4.1 4.1,4.1s4.1-1.8 4.1-4.1v-98.1l47,47c1.6,1.6 4.2,1.6 5.8,0s1.5-4.2 1.42109e-14-5.8z"/>
-            </g>
-          </svg>
-        </a>*/}
+          {/* <a
+            className={cls("back-to-top", { 'show': this.props.base.showBackToTop })}
+            href="#" onClick={this.backToTop.bind(this)}>
+            <svg viewBox="0 0 129 129" enableBackground="new 0 0 129 129">
+              <g>
+                <path d="m121.4,61.6l-54-54c-0.7-0.7-1.8-1.2-2.9-1.2s-2.2,0.5-2.9,1.2l-54,54c-1.6,1.6-1.6,4.2 0,5.8 0.8,0.8 1.8,1.2 2.9,1.2s2.1-0.4 2.9-1.2l47-47v98.1c0,2.3 1.8,4.1 4.1,4.1s4.1-1.8 4.1-4.1v-98.1l47,47c1.6,1.6 4.2,1.6 5.8,0s1.5-4.2 1.42109e-14-5.8z"/>
+              </g>
+            </svg>
+          </a> */}
+        </main>
       </div>
     )
   }

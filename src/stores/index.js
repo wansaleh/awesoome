@@ -11,9 +11,12 @@ export class BaseStore {
 
   @observable searchTerm = ''
   @observable sortType = 'default'
+  @observable current = null
   @observable.shallow categoryResults = []
   @observable.shallow itemResults = []
+  @observable info = null
 
+  @observable showBurger = false
   @observable showBackToTop = false
 
   constructor(router) {
@@ -28,8 +31,7 @@ export class BaseStore {
       this.loading = true
       nprogress.inc()
 
-      // fetch(`https://api.awesoo.me/things`)
-      fetch(`https://api.awesoo.me/things`)
+      fetch(`https://api.awesoo.me/categories`)
       .then(res => res.json())
       .then(data => {
         // console.log(data);
@@ -40,6 +42,13 @@ export class BaseStore {
         callback()
         nprogress.done()
       })
+
+      fetch(`https://api.awesoo.me/info`)
+      .then(res => res.json())
+      .then(data => {
+        this.info = data
+      })
+
     }
   }
 
