@@ -1,0 +1,25 @@
+@import '../styles/base';
+
+.footer {
+  // display: flex;
+  // position: fixed;
+  // bottom: 1.75rem;
+  // left: 50%;
+  // transform: translateX(-50%);
+  // right: 15px;
+  margin: 1rem auto;
+  color: $gray-400;
+  font-size: .8rem;
+  text-align: center;
+  // justify-content: flex-end;
+  z-index: 100;
+
+  > p {
+    // display: inline-block;
+    background: $gray-100;
+    margin: 0;
+    // margin-right: -.5em;
+    padding: .25em .5em;
+    border-radius: 4px;
+  }
+}

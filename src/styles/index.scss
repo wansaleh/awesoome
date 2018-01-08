@@ -1,20 +1,4 @@
-@import url("//fonts.googleapis.com/css?family=Droid+Sans+Mono");
-
-@import "~material-colors/dist/colors";
-
-$blue: $md-blue-a700;
-$brand: $blue;
-
-@import "~primer-support/index";
-
-$input-border-color: $border-gray;
-$input-focus-border-color: $blue;
-$input-padding-y: .25rem;
-$input-padding-x: .5rem;
-$btn-secondary-border: $gray-400;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+@import 'base';
 @import "~bootstrap/scss/root";
 @import "~bootstrap/scss/bootstrap-reboot";
 @import "~bootstrap/scss/bootstrap-grid";
@@ -65,18 +49,10 @@ label, label > span {
   margin-bottom: 0;
 }
 
-// .container {
-//   padding: 2rem 0 4rem;
-// }
-
 .nav {
-  // position: fixed;
-  // left: 0;
-  // right: 0;
   background: #fff;
   color: $gray-300;
   padding: 2rem 0 0;
-  // box-shadow: 0 0 10px $gray-200;
 }
 
 header {
@@ -507,29 +483,6 @@ header {
   .homepage {
     float: right;
     padding-left: 1rem;
-  }
-}
-
-footer {
-  display: flex;
-  position: fixed;
-  bottom: 1.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  // right: 15px;
-  color: $gray-400;
-  font-size: .8rem;
-  text-align: right;
-  justify-content: flex-end;
-  z-index: 100;
-
-  > p {
-    display: inline-block;
-    background: $gray-100;
-    margin: 0;
-    margin-right: -.5em;
-    padding: .25em .5em;
-    border-radius: 4px;
   }
 }
 

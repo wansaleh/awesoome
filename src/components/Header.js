@@ -5,23 +5,13 @@ import { withRouter } from 'react-router'
 import { Emojione } from 'react-emoji-render'
 import cls from 'classnames'
 import Fuse from 'fuse.js'
-// import _map from 'lodash/map'
 import _isEmpty from 'lodash/isEmpty'
-// import _debounce from 'lodash/debounce'
 import { Helmet } from 'react-helmet'
 import ReactPlaceholder from 'react-placeholder'
-// import { animateScroll } from 'react-scroll'
-// import { slide as Menu } from 'react-burger-menu'
-// import windowDimensions from 'react-window-dimensions';
-// import timeAgo from 'epoch-timeago';
 import TimeAgo from 'react-timeago'
 
-import Header from './Header'
-import Footer from './Footer'
 import Sidebar from './Sidebar'
 import Readme from './Readme'
-// import Content from './Content'
-// import Testing from './Testing'
 import { repo } from '../../github.json'
 
 const fuseOptions = {
@@ -59,20 +49,10 @@ const Home = () => {
 @inject('router', 'base')
 @withRouter
 @observer
-export default class App extends Component {
+export default class Header extends Component {
   componentDidMount() {
     this.props.base.loadThings()
-    // window.addEventListener('scroll', this.handleScroll.bind(this))
   }
-
-  // handleScroll(e) {
-  //   const deb = _debounce(() => {
-  //     const top = window.scrollY
-  //     this.props.base.showBackToTop = top > 200
-  //   }, 500)
-
-  //   deb()
-  // }
 
   highlightCategories() {
     const { things, searchTerm } = this.props.base
@@ -104,10 +84,6 @@ export default class App extends Component {
     this.props.base.searchTerm = ''
   }
 
-  // backToTop(e) {
-  //   animateScroll.scrollTo(0, { duration: 300 })
-  // }
-
   componentWillUnmount() {
     this.props.base.loading = false
     this.props.base.things = []
@@ -115,42 +91,54 @@ export default class App extends Component {
 
     this.props.base.searchTerm = ''
     this.props.base.sortType = 'default'
-
-    // window.removeEventListener('scroll', this.handleScroll.bind(this))
+    this.props.base.categoryResults = []
+    this.props.base.itemResults = []
   }
 
   render() {
-    const { searchTerm } = this.props.base
+    const { things, searchTerm } = this.props.base
 
     return (
-      <div id="outer-container">
-        <Helmet titleTemplate="%s - Awesoo.me">
-          <title>Home</title>
-        </Helmet>
+      <Fragment>
+        <div className="nav">
+          <header className="container">
+            <h1>
+              <Link to="/" onClick={this.clearSearch}><Emojione svg text=":sunglasses: Awesoo.me" /></Link>
+            </h1>
 
-        <main id="page-wrap">
-          <Header />
-
-          {/* ROUTE DEFINITIONS */}
-          <Route render={({ location, history, match }) => (
-            <div className="container">
-              <Route exact path="/" component={Home}></Route>
-
-              <div className="row">
-                <div className={cls("col-md-3 lists", { searching: searchTerm !== '' })}>
-                  <Route path="/:category" component={Sidebar}></Route>
-                </div>
-                <div className="col-md-9">
-                  <Route exact path="/:category/:item/:subitem/:owner/:repo" component={Readme}></Route>
-                  <Route exact path="/:category/:owner/:repo" component={Readme}></Route>
-                </div>
-              </div>
+            <div className="search">
+              <input
+                className="form-control"
+                type="search" placeholder="Search something awesome..."
+                value={searchTerm}
+                onChange={this.handleSearch.bind(this)} />
             </div>
-          )} ></Route>
+          </header>
 
-          <Footer />
-        </main>
-      </div>
+          <div className={cls("container categories", { searching: searchTerm !== '' })}>
+            <ReactPlaceholder type='text' rows={1} ready={!_isEmpty(things)} color="#e1e4e8">
+              {things &&
+                <ul className="list">
+                  {things.map(item =>
+                    <li
+                      className={cls("dib", { highlight: this.isCategoryFound(item.id) })}
+                      key={item.id}
+                      data-id={item.id}>
+                      <NavLink to={`/${item.id}`}
+                        activeClassName="active"
+                        disabled={searchTerm !== '' && !this.isCategoryFound(item.id)}
+                      >
+                        {item.title}
+                        {/* {this.isCategoryFound(item.id) && <span className="result-count">10</span>} */}
+                      </NavLink>
+                    </li>
+                  )}
+                </ul>
+              }
+            </ReactPlaceholder>
+          </div>
+        </div>
+      </Fragment>
     )
   }
 }

@@ -12,8 +12,6 @@ export class BaseStore {
   @observable searchTerm = ''
   @observable sortType = 'default'
   @observable current = null
-  @observable.shallow categoryResults = []
-  @observable.shallow itemResults = []
   @observable info = null
 
   @observable showBurger = false

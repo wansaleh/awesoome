@@ -134,7 +134,7 @@ export default class Readme extends Component {
         {info &&
           <Helmet>
             <title>{info.name}</title>
-            <meta name="description" content={info.description} />
+            {info.description && <meta name="description" content={info.description} />}
           </Helmet>
         }
 
@@ -175,15 +175,17 @@ export default class Readme extends Component {
           {ready &&
             <div>
 
-              <div className="description">
-                {info.homepage &&
-                  <a className="homepage" href={info.homepage} target="_blank" rel="noopener noreferrer">
-                    {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
-                  </a>
-                }
+              {info.description &&
+                <div className="description">
+                  {info.homepage &&
+                    <a className="homepage" href={info.homepage} target="_blank" rel="noopener noreferrer">
+                      {info.homepage.replace(/^https?:\/\/(www.)?|\/$/g, '')}
+                    </a>
+                  }
 
-                <Emojione svg text={info.description} />
-              </div>
+                  <Emojione svg text={info.description} />
+                </div>
+              }
 
               {processReadme(this.props.base.things, repo, readme, router)}
 

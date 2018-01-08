@@ -25,21 +25,6 @@ export default class SidebarContents extends Component {
     return _find(this.props.base.things, thing => thing.id === category)
   }
 
-  // componentDidMount() {
-  //   console.log('cdm: sidebar');
-  //   // const { match } = this.props
-  //   // this.get(match.params.category)
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-  //   console.log('cwrp: sidebar');
-  //   // const { match } = nextProps
-
-  //   // if (this.props.match.params.category !== nextProps.match.params.category) {
-  //   //   this.get(match.params.category)
-  //   // }
-  // }
-
   componentWillUnmount() {
     this.props.base.current = null
   }
@@ -47,11 +32,7 @@ export default class SidebarContents extends Component {
   getLink(item) {
     const { match } = this.props
 
-    // if (parentTitle)
-    //   return `/${match.params.category}/${parentTitle}/${repo}`
-
     return `/${match.params.category}/${item.id}`
-    // return '/' + match.params.category + '/' + repo
   }
 
   isCategoryFound(id) {
