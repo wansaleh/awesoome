@@ -137,7 +137,7 @@ export default class App extends Component {
               <Route exact path="/" component={Home}></Route>
 
               <div className="row">
-                <div className={cls("col-md-3 lists", { searching: searchTerm !== '' })}>
+                <div className={cls("col-md-3", { searching: searchTerm !== '' })}>
                   <Route path="/:category" component={Sidebar}></Route>
                 </div>
                 <div className="col-md-9">

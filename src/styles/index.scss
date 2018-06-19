@@ -178,25 +178,6 @@ header {
   overflow-x: visible;
 }
 
-.categories-2 {
-  h2 {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-
-    .show-toggle {
-      font-size: .8rem;
-      font-weight: 500;
-      text-transform: uppercase;
-    }
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-}
-
 .stars {
   display: inline-block;
   margin-left: .3rem;
@@ -393,10 +374,6 @@ header {
       }
     }
   }
-
-  // &.lists .links:not(.highlight) {
-  //   // display: none;
-  // }
 }
 
 .readme {

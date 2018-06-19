@@ -142,7 +142,7 @@ export default class SidebarContents extends Component {
     if (!current) return null
 
     return (
-      <Fragment>
+      <div className="lists">
         <h2>
           {current.title}
         </h2>
@@ -156,7 +156,7 @@ export default class SidebarContents extends Component {
           <span className="legend"><Dot className="new" /> {'<'} 1 month</span>
           <span className="legend"><Dot className="old" /> {'>'} 6 months </span>
         </div>
-      </Fragment>
+      </div>
     )
   }
 }
